@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "35679996071",
+    "firebase_url": "https://albushealthcare-fd3da.firebaseio.com",
+    "project_id": "albushealthcare-fd3da",
+    "storage_bucket": "albushealthcare-fd3da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:35679996071:android:d6363d5a8c169e7c05b382",
+        "android_client_info": {
+          "package_name": "com.albushealthcare.albus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "35679996071-acjr4aum92jkmj0ng1bqfbvc7ijj87rl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEsUljsrsVQV0KHztjWq0al4ojq-qa4LE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "35679996071-acjr4aum92jkmj0ng1bqfbvc7ijj87rl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

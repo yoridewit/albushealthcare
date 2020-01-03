@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "710966047163",
+    "firebase_url": "https://albus-3db84.firebaseio.com",
+    "project_id": "albus-3db84",
+    "storage_bucket": "albus-3db84.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:710966047163:android:3923ec020d22e843c1d49e",
+        "android_client_info": {
+          "package_name": "com.example.albus01"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "710966047163-1a2bv2f84q45093rgv6cpuhergku6k1a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4nWChImikbfa5aCBtsyvnXu5OrQAHOQ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "710966047163-1a2bv2f84q45093rgv6cpuhergku6k1a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
