@@ -34,3 +34,20 @@ const Body2TextStyle = TextStyle(
   fontSize: SubtextSize,
   color: Colors.white70,
 );
+
+const textInputDecoration = InputDecoration(
+  fillColor: Colors.white,
+  filled: true,
+  enabledBorder: OutlineInputBorder(
+    borderSide: BorderSide(
+      color: Colors.white,
+      width: 1,
+    ),
+  ),
+  focusedBorder: OutlineInputBorder(
+    borderSide: BorderSide(
+      color: Colors.blue,
+      width: 1,
+    ),
+  ),
+);

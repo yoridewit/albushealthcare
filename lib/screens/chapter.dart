@@ -38,7 +38,6 @@ class Chapter extends StatelessWidget {
                     return _buildList(context, snapshot.data.documents[index]);
                   });
             }
-            ;
           },
         ),
       ),

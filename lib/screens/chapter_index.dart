@@ -2,10 +2,20 @@ import 'package:albus/constants/style.dart';
 import 'package:albus/models/checklists.dart';
 import 'package:albus/widgets/app_bar.dart';
 import 'package:albus/widgets/drawer_widget.dart';
+import '../providers/weights.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+class Weight extends ChangeNotifier {
+  int currentWeightInKg = 0;
+
+  void changeWeight(int weight) {
+    currentWeightInKg = weight;
+    notifyListeners();
+  }
+}
 
 class ChapterIndex extends StatelessWidget {
   static const String id = 'chapter_index_screen';
