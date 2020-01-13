@@ -22,11 +22,11 @@ const TitleTextStyle = TextStyle(
 );
 
 const Body1TextStyle = TextStyle(
-  fontFamily: FontNameDefault,
-  fontSize: BodyTextSize,
-  fontWeight: FontWeight.w500,
-  color: Colors.white,
-);
+    fontFamily: FontNameDefault,
+    fontSize: BodyTextSize,
+    fontWeight: FontWeight.w500,
+    color: Colors.white,
+    letterSpacing: 0.4);
 
 const Body2TextStyle = TextStyle(
   fontFamily: FontNameCondensed,
@@ -38,16 +38,22 @@ const Body2TextStyle = TextStyle(
 const textInputDecoration = InputDecoration(
   fillColor: Colors.white,
   filled: true,
+  disabledBorder: OutlineInputBorder(
+    borderSide: BorderSide(
+      color: Color.fromRGBO(58, 66, 86, 1.0),
+      width: 1,
+    ),
+  ),
   enabledBorder: OutlineInputBorder(
     borderSide: BorderSide(
-      color: Colors.white,
+      color: Colors.deepOrange,
       width: 1,
     ),
   ),
   focusedBorder: OutlineInputBorder(
     borderSide: BorderSide(
-      color: Colors.blue,
-      width: 1,
+      color: Colors.deepOrange,
+      width: 2,
     ),
   ),
 );

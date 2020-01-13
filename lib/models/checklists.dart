@@ -1,6 +1,6 @@
 class Checklist {
-  final String title;
-  final String docName;
+  final String checkListTitle;
+  final String checklistName;
 
-  Checklist({this.title, this.docName});
+  Checklist({this.checklistName, this.checkListTitle});
 }

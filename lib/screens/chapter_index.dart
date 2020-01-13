@@ -1,10 +1,10 @@
 import 'package:albus/constants/style.dart';
+import 'package:albus/models/chapters.dart';
 import 'package:albus/models/checklists.dart';
+import 'package:albus/screens/chapter_tabs.dart';
 import 'package:albus/widgets/app_bar.dart';
 import 'package:albus/widgets/drawer_widget.dart';
-import '../providers/weights.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -28,7 +28,13 @@ class ChapterIndex extends StatelessWidget {
     return Scaffold(
       drawer: DrawerWidget(),
       appBar: CustomAppBar(
-        title: checklist.title,
+        title: checklist.checkListTitle,
+        icon: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       backgroundColor: Theme.of(context).primaryColor,
       body: Padding(
@@ -36,7 +42,7 @@ class ChapterIndex extends StatelessWidget {
           child: StreamBuilder(
             stream: Firestore.instance
                 .collection('userbase')
-                .document(checklist.docName)
+                .document(checklist.checklistName)
                 .collection("chapter_index")
                 .orderBy('order', descending: false)
                 .snapshots(),
@@ -47,12 +53,13 @@ class ChapterIndex extends StatelessWidget {
                 );
               }
               if (snapshot.hasError) {
-                return Text('Error.');
+                return Text('Error getting data.');
               }
               return ListView.builder(
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
-                  return _buildList(context, snapshot.data.documents[index]);
+                  return _buildList(
+                      context, snapshot.data.documents[index], checklist);
                 },
               );
             },
@@ -62,12 +69,17 @@ class ChapterIndex extends StatelessWidget {
 }
 
 //Create a button with FireBase text
-Widget _buildList(BuildContext context, DocumentSnapshot document) {
+Widget _buildList(
+    BuildContext context, DocumentSnapshot document, Checklist checklist) {
+  Chapters chapterInfo = Chapters(
+      chapterName: document['title'], checkListName: checklist.checklistName);
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 15.0),
     child: FlatButton(
-      onPressed: () {},
-      color: Theme.of(context).primaryColorLight,
+      onPressed: () {
+        Navigator.pushNamed(context, ChapterTabs.id, arguments: chapterInfo);
+      },
+      color: Color(0xFFF3F5F7),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -128,13 +140,3 @@ Color createColor(String color) {
       return Colors.black;
   }
 }
-
-// Future<String> getTitleName() async {
-//   DocumentSnapshot snapshot = await Firestore.instance
-//       .collection('userbase')
-//       .document('hagaziekenhuis_OK_volwassenen')
-//       .get();
-//   String title = snapshot['title'];
-//   print(title);
-//   return title;
-// }

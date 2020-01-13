@@ -1,6 +1,10 @@
 import 'package:albus/constants/style.dart';
+import 'package:albus/models/chapters.dart';
+import 'package:albus/providers/documents.dart';
 import 'package:albus/providers/weights.dart';
 import 'package:albus/screens/chapter.dart';
+import 'package:albus/screens/ddx.dart';
+import 'package:albus/screens/medication.dart';
 import 'package:albus/screens/weight_settings_panel.dart';
 import 'package:albus/widgets/drawer_widget.dart';
 import 'package:flutter/material.dart';
@@ -8,13 +12,20 @@ import 'package:flutter/services.dart';
 import 'package:albus/widgets/app_bar.dart';
 import 'package:provider/provider.dart';
 
-class ChapterTabs extends StatelessWidget {
+class ChapterTabs extends StatefulWidget {
   static const String id = 'chapter_tabs_screen';
 
   @override
+  _ChapterTabsState createState() => _ChapterTabsState();
+}
+
+class _ChapterTabsState extends State<ChapterTabs> {
+  @override
   Widget build(BuildContext context) {
     int tempNumber = Provider.of<Weights>(context).weight;
-    print('$tempNumber from Chapter Tabs');
+    Chapters chapterInfo = ModalRoute.of(context).settings.arguments;
+    String checkListName = chapterInfo.checkListName;
+    String chapterName = chapterInfo.chapterName;
 
     void _showWeightPanel() {
       showModalBottomSheet(
@@ -29,81 +40,86 @@ class ChapterTabs extends StatelessWidget {
 
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: Theme.of(context).primaryColor));
-    return Scaffold(
-      drawer: DrawerWidget(),
-      backgroundColor: Theme.of(context).primaryColor,
-      appBar: CustomAppBar(title: 'Chapter Index'),
-      body: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          backgroundColor: Theme.of(context).primaryColor,
-          floatingActionButton: FloatingActionButton.extended(
-              onPressed: () {
-                tempNumber == null
-                    ? _showWeightPanel()
-                    : Provider.of<Weights>(context).deleteValue();
-              },
-              elevation: 10.0,
-              icon: tempNumber == null
-                  ? Icon(Icons.add)
-                  : Icon(Icons.delete_forever),
-              label: Text(
-                tempNumber == null ? 'KG' : '$tempNumber KG',
-                style: Body1TextStyle,
-              )),
-          body: TabBarView(
-            children: <Widget>[
-              Chapter(),
-              Container(
-                color: Theme.of(context).primaryColor,
-                child: Center(
-                  child: Text(
-                    'Medication Screen',
-                    style: Body1TextStyle,
-                  ),
-                ),
-              ),
-              Container(
-                color: Theme.of(context).primaryColor,
-                child: Center(
-                  child: Text(
-                    'DDx Screen',
-                    style: Body1TextStyle,
-                  ),
-                ),
-              ),
-            ],
+    return ChangeNotifierProvider(
+      create: (ctx) => Documents(),
+      child: Scaffold(
+        drawer: DrawerWidget(),
+        backgroundColor: Theme.of(context).primaryColor,
+        appBar: CustomAppBar(
+          title: chapterName,
+          icon: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-          //CONTENT
-          bottomNavigationBar: TabBar(
-            tabs: <Widget>[
-              //FIRST TAB
-              Tab(
-                icon: Icon(
-                  Icons.assignment,
-                  color: Colors.white,
+        ),
+        body: DefaultTabController(
+          length: 3,
+          child: Scaffold(
+            backgroundColor: Theme.of(context).primaryColor,
+            floatingActionButton: FloatingActionButton.extended(
+                onPressed: () {
+                  tempNumber == null
+                      ? _showWeightPanel()
+                      : Provider.of<Weights>(context).deleteValue();
+                },
+                elevation: 10.0,
+                icon: tempNumber == null
+                    ? Icon(Icons.add)
+                    : Icon(Icons.delete_forever),
+                label: Text(
+                  tempNumber == null ? 'KG' : '$tempNumber KG',
+                  style: Body1TextStyle,
+                )),
+            body: TabBarView(
+              children: <Widget>[
+                //pass values from chapter_index's modal route via the Chapters model class
+                Chapter(
+                  chapterName: chapterName,
+                  checkListName: checkListName,
                 ),
-              ),
-              //SECOND TAB
-              Tab(
-                icon: Icon(
-                  Icons.colorize,
-                  color: Colors.white,
+                Medication(
+                  chapterName: chapterName,
+                  checkListName: checkListName,
                 ),
-              ),
-              //THIRD TAB
-              Tab(
-                icon: Icon(
-                  Icons.help,
-                  color: Colors.white,
+                DDx(
+                  chapterName: chapterName,
+                  checklistName: checkListName,
                 ),
-              ),
-            ],
-            unselectedLabelColor: Colors.black,
-            indicatorSize: TabBarIndicatorSize.label,
-            indicatorPadding: EdgeInsets.all(5.0),
-            indicatorColor: Colors.red,
-            indicatorWeight: 4.0,
+              ],
+            ),
+            //CONTENT
+            bottomNavigationBar: TabBar(
+              tabs: <Widget>[
+                //FIRST TAB
+                Tab(
+                  icon: Icon(
+                    Icons.assignment,
+                    color: Colors.white,
+                  ),
+                ),
+                //SECOND TAB
+                Tab(
+                  icon: Icon(
+                    Icons.colorize,
+                    color: Colors.white,
+                  ),
+                ),
+                //THIRD TAB
+                Tab(
+                  icon: Icon(
+                    Icons.help,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+              unselectedLabelColor: Colors.black,
+              indicatorSize: TabBarIndicatorSize.label,
+              indicatorPadding: EdgeInsets.all(5.0),
+              indicatorColor: Colors.red,
+              indicatorWeight: 4.0,
+            ),
           ),
         ),
       ),
