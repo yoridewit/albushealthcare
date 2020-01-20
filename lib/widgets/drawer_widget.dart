@@ -1,5 +1,6 @@
 import 'package:albus/constants/style.dart';
 import 'package:albus/models/checklists.dart';
+import 'package:albus/screens/contact.dart';
 import 'package:albus/screens/home.dart';
 import 'package:albus/widgets/checklist_tile_drawer.dart';
 import 'package:flutter/material.dart';
@@ -56,11 +57,12 @@ class DrawerWidget extends StatelessWidget {
           new ListTile(
             leading: Icon(Icons.email),
             title: new Text(
-              "Contact",
+              "Contact | F.A.Q.",
               style: Body1TextStyle.copyWith(color: Colors.grey[800]),
             ),
             onTap: () {
-              //different route option
+              Navigator.pop(context);
+              Navigator.pushNamed(context, Contact.id);
             },
           ),
         ],

@@ -4,7 +4,7 @@ import 'package:albus/models/checklists.dart';
 import 'package:albus/models/user.dart';
 import 'package:albus/services/auth.dart';
 import 'package:albus/widgets/app_bar.dart';
-import 'package:albus/widgets/checklist_tile%20home.dart';
+import 'package:albus/widgets/checklist_tile_home.dart';
 import 'package:albus/widgets/drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,7 +26,7 @@ class Home extends StatelessWidget {
       appBar: CustomAppBar(
         title: 'Home',
         icon: IconButton(
-          icon: Icon(Icons.person_outline),
+          icon: Icon(Icons.exit_to_app),
           onPressed: () async {
             await _auth.signOut();
           },
@@ -37,6 +37,8 @@ class Home extends StatelessWidget {
         child: Center(
           child: Column(
             children: <Widget>[
+              SizedBox(height: 20),
+              Image.asset('assets/logo_white.png', width: 100),
               SizedBox(height: 50),
               FadeAnimation(
                 0.2,
@@ -62,7 +64,7 @@ class Home extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(5),
                       color: Color(0xFFF3F5F7),
                     ),
                     child: ListView.separated(
@@ -107,7 +109,3 @@ class Home extends StatelessWidget {
     );
   }
 }
-
-// await DatabaseService(uid: user.uid)
-//     .updateUserSubscribedChecklists(
-//         'hagaziekenhuis_OK_kinderen');

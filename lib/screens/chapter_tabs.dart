@@ -1,5 +1,6 @@
 import 'package:albus/constants/style.dart';
 import 'package:albus/models/chapters.dart';
+import 'package:albus/models/checklists.dart';
 import 'package:albus/providers/documents.dart';
 import 'package:albus/providers/weights.dart';
 import 'package:albus/screens/chapter.dart';
@@ -14,6 +15,8 @@ import 'package:provider/provider.dart';
 
 class ChapterTabs extends StatefulWidget {
   static const String id = 'chapter_tabs_screen';
+  final Chapters chapterInfo;
+  ChapterTabs(this.chapterInfo);
 
   @override
   _ChapterTabsState createState() => _ChapterTabsState();
@@ -23,7 +26,7 @@ class _ChapterTabsState extends State<ChapterTabs> {
   @override
   Widget build(BuildContext context) {
     int tempNumber = Provider.of<Weights>(context).weight;
-    Chapters chapterInfo = ModalRoute.of(context).settings.arguments;
+    Chapters chapterInfo = widget.chapterInfo;
     String checkListName = chapterInfo.checkListName;
     String chapterName = chapterInfo.chapterName;
 

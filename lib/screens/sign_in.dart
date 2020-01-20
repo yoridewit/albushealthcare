@@ -1,6 +1,5 @@
 import 'package:albus/animation/FadeInAnimation.dart';
 import 'package:albus/constants/style.dart';
-import 'package:albus/screens/authenticate.dart';
 import 'package:albus/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

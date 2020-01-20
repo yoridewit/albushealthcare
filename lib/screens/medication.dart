@@ -37,15 +37,45 @@ class Medication extends StatelessWidget {
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             {
               if (!snapshot.hasData) {
-                return SpinKitRing(
-                  color: Theme.of(context).accentColor,
+                return Container();
+              }
+              if (snapshot.data.documents.length < 1) {
+                return Center(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(height: 120),
+                      Image.asset(
+                        'assets/error.png',
+                        width: 175,
+                      ),
+                      SizedBox(height: 50),
+                      Text(
+                        'No data found',
+                        style: Body1TextStyle.copyWith(
+                            color: Colors.white, fontSize: 32),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'No internet connection',
+                        style: Body1TextStyle.copyWith(color: Colors.white),
+                      ),
+                      Text(
+                        'or',
+                        style: Body2TextStyle.copyWith(color: Colors.white),
+                      ),
+                      Text(
+                        'The current checklist section is empty',
+                        style: Body1TextStyle.copyWith(color: Colors.white),
+                      ),
+                    ],
+                  ),
                 );
               }
               if (snapshot.hasError) {
                 return Text('error');
               }
               return ListView.builder(
-                  padding: EdgeInsets.only(top: 20),
+                  padding: EdgeInsets.only(top: 10),
                   itemCount: snapshot.data.documents.length,
                   itemBuilder: (context, index) {
                     return _buildList(context, snapshot.data.documents[index],
@@ -141,8 +171,9 @@ Widget _buildList(
           elevation: 0.0,
           margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
           child: Container(
-            decoration:
-                BoxDecoration(color: Theme.of(context).primaryColorLight),
+            decoration: BoxDecoration(
+                color: Color(0xFFF3F5F7),
+                borderRadius: BorderRadius.circular(2)),
             child: Container(
               child: Padding(
                 padding:
@@ -152,11 +183,12 @@ Widget _buildList(
                   children: <Widget>[
                     Text(
                       document['medicationName'],
-                      style: Body1TextStyle,
+                      style: Body1TextStyle.copyWith(
+                          color: Colors.black, fontWeight: FontWeight.w600),
                     ),
                     Text(
                       formulateStringNoCalculation(medicationItem),
-                      style: Body1TextStyle,
+                      style: Body1TextStyle.copyWith(color: Colors.black),
                     ),
                   ],
                 ),
@@ -168,12 +200,14 @@ Widget _buildList(
           elevation: 0.0,
           margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
           child: Container(
-            decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
+            decoration: BoxDecoration(
+                color: Color(0xFFF3F5F7),
+                borderRadius: BorderRadius.circular(5)),
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(width: 1, color: Colors.deepOrange[400]),
+                border: Border.all(width: 1.4, color: Colors.deepOrange[400]),
                 borderRadius: BorderRadius.all(
-                  Radius.circular(5.0),
+                  Radius.circular(4.0),
                 ),
               ),
               child: Padding(
@@ -185,12 +219,13 @@ Widget _buildList(
                     Expanded(
                       child: Text(
                         document['medicationName'],
-                        style: Body1TextStyle,
+                        style: Body1TextStyle.copyWith(
+                            color: Colors.black, fontWeight: FontWeight.w600),
                       ),
                     ),
                     Text(
                       formulateStringWithCalculation(medicationItem),
-                      style: Body1TextStyle,
+                      style: Body1TextStyle.copyWith(color: Colors.black),
                     ),
                   ],
                 ),

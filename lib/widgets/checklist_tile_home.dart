@@ -17,6 +17,7 @@ class ChecklistTileHome extends StatelessWidget {
         checklist.checkListTitle,
         style: Body1TextStyle.copyWith(
           color: Theme.of(context).primaryColor,
+          fontWeight: FontWeight.w600,
         ),
         textAlign: TextAlign.center,
       ),

@@ -16,7 +16,7 @@ class ChecklistTileDrawer extends StatelessWidget {
       },
       title: Text(
         checklist.checkListTitle,
-        style: Body1TextStyle.copyWith(color: Colors.grey[800]),
+        style: Body1TextStyle.copyWith(color: Colors.grey[800], fontSize: 15),
       ),
     );
   }

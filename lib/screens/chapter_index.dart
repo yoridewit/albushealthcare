@@ -2,6 +2,7 @@ import 'package:albus/constants/style.dart';
 import 'package:albus/models/chapters.dart';
 import 'package:albus/models/checklists.dart';
 import 'package:albus/screens/chapter_tabs.dart';
+import 'package:albus/services/database.dart';
 import 'package:albus/widgets/app_bar.dart';
 import 'package:albus/widgets/drawer_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,25 +11,44 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Weight extends ChangeNotifier {
   int currentWeightInKg = 0;
-
   void changeWeight(int weight) {
     currentWeightInKg = weight;
     notifyListeners();
   }
 }
 
-class ChapterIndex extends StatelessWidget {
+_asyncLoadData() async {
+  final DatabaseService _databaseService = DatabaseService();
+  _databaseService.getAllData();
+  print('loaded alldata');
+}
+
+class ChapterIndex extends StatefulWidget {
+  final Checklist checklist;
+  ChapterIndex(this.checklist);
+
   static const String id = 'chapter_index_screen';
+
+  @override
+  _ChapterIndexState createState() => _ChapterIndexState();
+}
+
+class _ChapterIndexState extends State<ChapterIndex> {
+  @override
+  void initState() {
+    super.initState();
+    _asyncLoadData();
+  }
 
   @override
   Widget build(BuildContext context) {
     //Get arguments from checklist_tile Navigator through the Checklist class
-    final Checklist checklist = ModalRoute.of(context).settings.arguments;
+    // final Checklist checklist = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
       drawer: DrawerWidget(),
       appBar: CustomAppBar(
-        title: checklist.checkListTitle,
+        title: widget.checklist.checkListTitle,
         icon: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -42,7 +62,7 @@ class ChapterIndex extends StatelessWidget {
           child: StreamBuilder(
             stream: Firestore.instance
                 .collection('userbase')
-                .document(checklist.checklistName)
+                .document(widget.checklist.checklistName)
                 .collection("chapter_index")
                 .orderBy('order', descending: false)
                 .snapshots(),
@@ -58,8 +78,8 @@ class ChapterIndex extends StatelessWidget {
               return ListView.builder(
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
-                  return _buildList(
-                      context, snapshot.data.documents[index], checklist);
+                  return _buildList(context, snapshot.data.documents[index],
+                      widget.checklist);
                 },
               );
             },

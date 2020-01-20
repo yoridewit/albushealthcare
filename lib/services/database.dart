@@ -1,5 +1,6 @@
 import 'package:albus/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import '../models/checklists.dart';
 
 class DatabaseService {
@@ -88,5 +89,12 @@ class DatabaseService {
   //get user doc stream
   Stream<UserData> get userData {
     return userCollection.document(uid).snapshots().map(_userDataFromSnapshot);
+  }
+
+  void getAllData() async {
+    Future<DocumentSnapshot> getData = Firestore.instance
+        .collection('userbase')
+        .document('hagaziekenhuis_OK_volwassenen')
+        .get();
   }
 }

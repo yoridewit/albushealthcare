@@ -1,4 +1,6 @@
 import 'package:albus/constants/style.dart';
+import 'package:albus/models/chapters.dart';
+import 'package:albus/screens/chapter_tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -32,8 +34,38 @@ class DDx extends StatelessWidget {
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             {
               if (!snapshot.hasData) {
-                return SpinKitRing(
-                  color: Theme.of(context).accentColor,
+                return Container();
+              }
+              if (snapshot.data.documents.length < 1) {
+                return Center(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(height: 120),
+                      Image.asset(
+                        'assets/error.png',
+                        width: 175,
+                      ),
+                      SizedBox(height: 50),
+                      Text(
+                        'No data found',
+                        style: Body1TextStyle.copyWith(
+                            color: Colors.white, fontSize: 32),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        'No internet connection',
+                        style: Body1TextStyle.copyWith(color: Colors.white),
+                      ),
+                      Text(
+                        'or',
+                        style: Body2TextStyle.copyWith(color: Colors.white),
+                      ),
+                      Text(
+                        'The current checklist section is empty',
+                        style: Body1TextStyle.copyWith(color: Colors.white),
+                      ),
+                    ],
+                  ),
                 );
               }
               if (snapshot.hasError) {
@@ -41,6 +73,8 @@ class DDx extends StatelessWidget {
               }
 
               return ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.only(top: 10),
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
                   return _buildList(context, snapshot.data.documents[index],
@@ -58,18 +92,20 @@ class DDx extends StatelessWidget {
 Widget _buildList(BuildContext context, DocumentSnapshot document,
     String currentChecklist, String checklistName, String chapterName) {
   String ddxTitle = document['title'];
+  String docId = document.documentID;
 
   return Card(
     elevation: 8.0,
-    margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+    margin: new EdgeInsets.symmetric(horizontal: 4.0, vertical: 6.0),
     child: Container(
       decoration: BoxDecoration(
-        color: Color.fromRGBO(64, 75, 96, .9),
+        borderRadius: BorderRadius.circular(2),
+        color: Colors.blueGrey[600],
       ),
       child: Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(4.0),
+            padding: const EdgeInsets.symmetric(vertical: 6),
             child: Text(
               ddxTitle,
               style: Body1TextStyle.copyWith(fontWeight: FontWeight.w600),
@@ -84,7 +120,7 @@ Widget _buildList(BuildContext context, DocumentSnapshot document,
                   .collection('chapter_index')
                   .document(chapterName)
                   .collection('ddx')
-                  .document(ddxTitle)
+                  .document(docId)
                   .collection('texts')
                   .orderBy('order', descending: false)
                   .snapshots(),
@@ -100,6 +136,7 @@ Widget _buildList(BuildContext context, DocumentSnapshot document,
                   }
 
                   return ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (context, index) {
@@ -124,12 +161,27 @@ Widget _buildList(BuildContext context, DocumentSnapshot document,
 Widget _buildListCard(BuildContext context, DocumentSnapshot document,
     String checklistName, String chapterName, String ddxTitle) {
   return Container(
-    margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+    margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
     child: Container(
-      child: document['url'] != ''
-          ? InkWell(
+      child: document['url'] == null || document['url'] == ''
+          ? Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Row(
+                children: <Widget>[
+                  Flexible(
+                    child: Container(
+                      child: Text(
+                        document['text'],
+                        style: Body1TextStyle.copyWith(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : InkWell(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(2.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -146,58 +198,22 @@ Widget _buildListCard(BuildContext context, DocumentSnapshot document,
                     Container(
                       child: Icon(
                         Icons.arrow_forward,
-                        color: Colors.blueAccent,
+                        color: Theme.of(context).accentColor,
                       ),
                     )
                   ],
                 ),
               ),
-              onTap: () {},
-            )
-          : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Container(
-                      child: Text(
-                        document['text'],
-                        style: Body1TextStyle.copyWith(color: Colors.black),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  ChapterTabs.id,
+                  arguments: Chapters(
+                      checkListName: checklistName,
+                      chapterName: document['url']),
+                );
+              },
             ),
     ),
   );
 }
-
-// return Card(
-//     elevation: 8.0,
-//     margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-//     child: Container(
-//       decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
-//       child: ListTile(
-//         title: Text(
-//           document['title'],
-//           style: Body1TextStyle,
-//         ),
-//         subtitle: Text('test'),
-//         trailing: document['url'] == null
-//             ? null
-//             : Icon(
-//                 Icons.arrow_forward,
-//                 color: Colors.white,
-//               ),
-//         onTap: () {
-//           Navigator.pushNamed(
-//             context,
-//             ChapterTabs.id,
-//             arguments: Chapters(
-//                 checkListName: currentChecklist, chapterName: document['url']),
-//           );
-//         },
-//       ),
-//     ),
-//   );
