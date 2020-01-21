@@ -50,13 +50,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.14.11"
-  connectivity:
-    dependency: "direct main"
-    description:
-      name: connectivity
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.6+2"
   convert:
     dependency: transitive
     description:
@@ -75,13 +68,6 @@ packages:
     dependency: "direct main"
     description:
       name: cupertino_icons
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.3"
-  fab_circular_menu:
-    dependency: "direct main"
-    description:
-      name: fab_circular_menu
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.3"
@@ -139,6 +125,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_launcher_icons:
+    dependency: "direct main"
+    description:
+      name: flutter_launcher_icons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.4"
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -198,13 +191,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.1+1"
-  linear_gradient:
-    dependency: "direct main"
-    description:
-      name: linear_gradient
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.12"
   matcher:
     dependency: transitive
     description:
@@ -226,13 +212,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.5"
-  password_strength:
-    dependency: "direct main"
-    description:
-      name: password_strength
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2"
   path:
     dependency: transitive
     description:
@@ -350,6 +329,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.5.0"
+  yaml:
+    dependency: transitive
+    description:
+      name: yaml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
 sdks:
   dart: ">=2.5.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+  flutter: ">=1.12.13+hotfix.4 <2.0.0"

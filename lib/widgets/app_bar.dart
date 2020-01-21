@@ -1,3 +1,4 @@
+import 'package:albus/constants/style.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -10,9 +11,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 0.0,
-      title: Text(
-        title,
-      ),
+      title: Text(title),
       actions: <Widget>[icon != null ? icon : Text('')],
     );
   }

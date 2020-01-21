@@ -135,7 +135,12 @@ Widget _buildList(BuildContext context, DocumentSnapshot document,
                     return Text('error');
                   }
 
-                  return ListView.builder(
+                  return ListView.separated(
+                    separatorBuilder: (context, index) => Divider(
+                      indent: 25,
+                      endIndent: 25,
+                      color: Colors.grey[500],
+                    ),
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: snapshot.data.documents.length,
@@ -172,7 +177,8 @@ Widget _buildListCard(BuildContext context, DocumentSnapshot document,
                     child: Container(
                       child: Text(
                         document['text'],
-                        style: Body1TextStyle.copyWith(color: Colors.black),
+                        style: Body2TextStyle.copyWith(
+                            color: Colors.black, fontSize: 18),
                       ),
                     ),
                   ),
@@ -189,12 +195,12 @@ Widget _buildListCard(BuildContext context, DocumentSnapshot document,
                       child: Container(
                         child: Text(
                           document['text'],
-                          overflow: TextOverflow.fade,
-                          softWrap: true,
-                          style: Body1TextStyle.copyWith(color: Colors.black),
+                          style: Body2TextStyle.copyWith(
+                              color: Colors.black, fontSize: 18),
                         ),
                       ),
                     ),
+                    SizedBox(width: 5),
                     Container(
                       child: Icon(
                         Icons.arrow_forward,

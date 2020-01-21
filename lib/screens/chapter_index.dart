@@ -17,11 +17,10 @@ class Weight extends ChangeNotifier {
   }
 }
 
-_asyncLoadData() async {
-  final DatabaseService _databaseService = DatabaseService();
-  _databaseService.getAllData();
-  print('loaded alldata');
-}
+// _asyncLoadData() async {
+//   final DatabaseService _databaseService = DatabaseService();
+//   _databaseService.getIndexData();
+// }
 
 class ChapterIndex extends StatefulWidget {
   final Checklist checklist;
@@ -37,7 +36,6 @@ class _ChapterIndexState extends State<ChapterIndex> {
   @override
   void initState() {
     super.initState();
-    _asyncLoadData();
   }
 
   @override

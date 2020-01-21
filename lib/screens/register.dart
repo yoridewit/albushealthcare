@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import '../services/auth.dart';
-import 'package:password_strength/password_strength.dart';
 
 class Register extends StatefulWidget {
   //accept toggleViewFunction from authenticate.dart

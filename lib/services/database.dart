@@ -14,6 +14,8 @@ class DatabaseService {
   final CollectionReference userCollection =
       Firestore.instance.collection('users');
 
+  final databaseReference = Firestore.instance;
+
   Future updateUserName(String name) async {
     return await userCollection.document(uid).setData({'name': name});
   }
@@ -91,10 +93,57 @@ class DatabaseService {
     return userCollection.document(uid).snapshots().map(_userDataFromSnapshot);
   }
 
-  void getAllData() async {
-    Future<DocumentSnapshot> getData = Firestore.instance
-        .collection('userbase')
-        .document('hagaziekenhuis_OK_volwassenen')
-        .get();
-  }
+  //get all data inside "hagaziekenhuis_OK_volwassenen"
+  //in and beyond chapter_index database depth"
+
+  // void getIndexData() async {
+  //   databaseReference
+  //       .collection('userbase')
+  //       .document('hagaziekenhuis_OK_volwassenen')
+  //       .collection('chapter_index')
+  //       .getDocuments()
+  //       .then((QuerySnapshot snapshot) {
+  //     //Actions get
+  //     snapshot.documents.forEach((document) {
+  //       DocumentReference docRef = document.reference;
+  //       CollectionReference colRef = docRef.collection('actions');
+  //       colRef.getDocuments().then((QuerySnapshot snapshot) {
+  //         snapshot.documents.forEach((document) {
+  //           DocumentReference docRef = document.reference;
+  //           CollectionReference colRef = docRef.collection('subtext');
+
+  //           colRef.getDocuments().then((QuerySnapshot snapshot) {
+  //             snapshot.documents.forEach((document) {});
+  //           });
+  //         });
+  //       });
+  //     });
+  //     //DDx get
+  //     snapshot.documents.forEach((document) {
+  //       DocumentReference docRef = document.reference;
+  //       CollectionReference colRef = docRef.collection('ddx');
+
+  //       colRef.getDocuments().then((QuerySnapshot snapshot) {
+  //         snapshot.documents.forEach((document) {
+  //           DocumentReference docRef = document.reference;
+  //           CollectionReference colRef = docRef.collection('texts');
+
+  //           colRef.getDocuments().then((QuerySnapshot snapshot) {
+  //             snapshot.documents.forEach((document) {});
+  //           });
+  //         });
+  //       });
+  //     });
+  //     //Medication get
+  //     snapshot.documents.forEach((document) {
+  //       DocumentReference docRef = document.reference;
+  //       CollectionReference colRef = docRef.collection('medication');
+
+  //       colRef.getDocuments().then((QuerySnapshot snapshot) {
+  //         snapshot.documents.forEach((document) {
+  //         });
+  //       });
+  //     });
+  //   });
+  // }
 }
