@@ -2,7 +2,6 @@ import 'package:albus/constants/style.dart';
 import 'package:albus/models/chapters.dart';
 import 'package:albus/models/checklists.dart';
 import 'package:albus/screens/chapter_tabs.dart';
-import 'package:albus/services/database.dart';
 import 'package:albus/widgets/app_bar.dart';
 import 'package:albus/widgets/drawer_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -54,34 +53,41 @@ class _ChapterIndexState extends State<ChapterIndex> {
           },
         ),
       ),
-      backgroundColor: Theme.of(context).primaryColor,
-      body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: StreamBuilder(
-            stream: Firestore.instance
-                .collection('userbase')
-                .document(widget.checklist.checklistName)
-                .collection("chapter_index")
-                .orderBy('order', descending: false)
-                .snapshots(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return SpinKitCircle(
-                  color: Theme.of(context).accentColor,
-                );
-              }
-              if (snapshot.hasError) {
-                return Text('Error getting data.');
-              }
-              return ListView.builder(
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index) {
-                  return _buildList(context, snapshot.data.documents[index],
-                      widget.checklist);
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: Column(
+        children: <Widget>[
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: StreamBuilder(
+                stream: Firestore.instance
+                    .collection('userbase')
+                    .document(widget.checklist.checklistName)
+                    .collection("chapter_index")
+                    .orderBy('order', descending: false)
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return SpinKitRing(
+                      color: Theme.of(context).accentColor,
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return Text('Error getting data.');
+                  }
+                  return ListView.separated(
+                    separatorBuilder: (context, index) => SizedBox(
+                      height: 5,
+                    ),
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index) {
+                      return _buildList(context, snapshot.data.documents[index],
+                          widget.checklist);
+                    },
+                  );
                 },
-              );
-            },
-          )),
+              )),
+        ],
+      ),
     );
   }
 }
@@ -92,25 +98,30 @@ Widget _buildList(
   Chapters chapterInfo = Chapters(
       chapterName: document['title'], checkListName: checklist.checklistName);
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-    child: FlatButton(
-      onPressed: () {
+    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+    child: InkWell(
+      onTap: () {
         Navigator.pushNamed(context, ChapterTabs.id, arguments: chapterInfo);
       },
-      color: Color(0xFFF3F5F7),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            document['title'],
-            style: Body1TextStyle.copyWith(
-                color: Colors.black, fontWeight: FontWeight.w600),
+      child: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                document['title'],
+                style: Body1TextStyle.copyWith(
+                    color: Colors.black, fontWeight: FontWeight.w600),
+              ),
+              Icon(
+                Icons.arrow_forward_ios,
+                color: createColor(document['color']),
+              ),
+            ],
           ),
-          Icon(
-            Icons.arrow_forward_ios,
-            color: createColor(document['color']),
-          ),
-        ],
+        ),
       ),
     ),
   );

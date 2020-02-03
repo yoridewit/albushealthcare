@@ -18,13 +18,36 @@ class AuthService {
 
   //sign in with email +pw
   Future signInWithEmailAndPassword(String email, String password) async {
+    String errorMessage;
     try {
       AuthResult result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
-    } catch (e) {
-      print(e.toString());
-      return null;
+      return user;
+    } catch (error) {
+      switch (error.code) {
+        case "ERROR_INVALID_EMAIL":
+          return errorMessage = "Invalid email adress";
+          break;
+        case "ERROR_WRONG_PASSWORD":
+          return errorMessage = "Oops. Wrong password";
+          break;
+        case "ERROR_USER_NOT_FOUND":
+          return errorMessage = "User with this email does not exist";
+          break;
+        case "ERROR_USER_DISABLED":
+          return errorMessage = "User with this email has been disabled";
+          break;
+        case "ERROR_TOO_MANY_REQUESTS":
+          return errorMessage = "Too many requests. Try again later.";
+          break;
+        case "ERROR_OPERATION_NOT_ALLOWED":
+          return errorMessage =
+              "Signing in with Email and Password is not enabled.";
+          break;
+        default:
+          return errorMessage = "An undefined Error happened.";
+      }
     }
   }
 
@@ -53,6 +76,7 @@ class AuthService {
   //sign out
   Future signOut() async {
     try {
+      print('signed out');
       return await _auth.signOut();
     } catch (e) {
       print('error: ' + e.toString());

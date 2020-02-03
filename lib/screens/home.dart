@@ -1,13 +1,11 @@
 import 'package:albus/animation/FadeInAnimation.dart';
 import 'package:albus/constants/style.dart';
 import 'package:albus/models/checklists.dart';
-import 'package:albus/models/user.dart';
 import 'package:albus/services/auth.dart';
 import 'package:albus/widgets/app_bar.dart';
 import 'package:albus/widgets/checklist_tile_home.dart';
 import 'package:albus/widgets/drawer_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
@@ -16,17 +14,16 @@ class Home extends StatelessWidget {
   static const String id = 'home';
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
+    final double screenWidth = MediaQuery.of(context).size.width;
     final checklists = Provider.of<List<Checklist>>(context) ?? [];
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Theme.of(context).primaryColor));
 
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: CustomAppBar(
         title: 'Home',
         icon: IconButton(
           icon: Icon(Icons.exit_to_app),
+          color: Colors.white,
           onPressed: () async {
             await _auth.signOut();
           },
@@ -38,7 +35,10 @@ class Home extends StatelessWidget {
           child: Column(
             children: <Widget>[
               SizedBox(height: 20),
-              Image.asset('assets/logo_white.png', width: 100),
+              Image.asset(
+                'assets/logo_white.png',
+                width: screenWidth > 500 ? 200 : 100,
+              ),
               SizedBox(height: 50),
               FadeAnimation(
                 0.2,
@@ -50,36 +50,36 @@ class Home extends StatelessWidget {
               FadeAnimation(
                 0.2,
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  padding: const EdgeInsets.symmetric(vertical: 15),
                   child: Divider(
                     thickness: 1,
+                    endIndent: screenWidth > 500 ? 200 : 40,
+                    indent: screenWidth > 500 ? 200 : 40,
                     color: Theme.of(context).accentColor,
                   ),
                 ),
               ),
               FadeAnimation(
                 0.4,
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Color(0xFFF3F5F7),
+                Container(
+                  width: screenWidth > 500 ? 550 : 320,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Color(0xFFF3F5F7),
+                  ),
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => Divider(
+                      endIndent: screenWidth > 500 ? 150 : 40,
+                      indent: screenWidth > 500 ? 150 : 40,
+                      color: Theme.of(context).primaryColor,
                     ),
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) => Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Divider(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                      shrinkWrap: true,
-                      itemCount: checklists.length,
-                      itemBuilder: (context, index) {
-                        return ChecklistTileHome(checklist: checklists[index]);
-                      },
-                    ),
+                    shrinkWrap: true,
+                    itemCount: checklists.length,
+                    itemBuilder: (context, index) {
+                      return ChecklistTileHome(
+                        checklist: checklists[index],
+                      );
+                    },
                   ),
                 ),
               ),
@@ -87,19 +87,18 @@ class Home extends StatelessWidget {
                 0.6,
                 IconButton(
                   icon: Icon(Icons.add),
-                  color: Colors.white,
+                  color: Color(0xFFF3F5F7),
                   onPressed: () {},
                   iconSize: 36,
                 ),
               ),
               FadeAnimation(
                 0.6,
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Divider(
-                    thickness: 1,
-                    color: Theme.of(context).accentColor,
-                  ),
+                Divider(
+                  thickness: 1,
+                  endIndent: screenWidth > 500 ? 200 : 40,
+                  indent: screenWidth > 500 ? 200 : 40,
+                  color: Theme.of(context).accentColor,
                 ),
               ),
             ],

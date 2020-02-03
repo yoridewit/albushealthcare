@@ -5,7 +5,13 @@ import './screens/authenticate.dart';
 
 import 'models/user.dart';
 
-class Wrapper extends StatelessWidget {
+class Wrapper extends StatefulWidget {
+  static const String id = 'wrapper';
+  @override
+  _WrapperState createState() => _WrapperState();
+}
+
+class _WrapperState extends State<Wrapper> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);

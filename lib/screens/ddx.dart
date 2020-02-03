@@ -4,6 +4,7 @@ import 'package:albus/screens/chapter_tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:albus/widgets/custom_expansion_tile.dart' as custom;
 
 class DDx extends StatelessWidget {
   static const String id = 'chapter_screen';
@@ -20,7 +21,7 @@ class DDx extends StatelessWidget {
     String currentChecklist = checklistName;
 
     return Scaffold(
-      backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Container(
         child: StreamBuilder(
           stream: Firestore.instance
@@ -72,13 +73,19 @@ class DDx extends StatelessWidget {
                 return Text('error');
               }
 
-              return ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.only(top: 10),
+              return ListView.separated(
+                separatorBuilder: (context, index) => SizedBox(
+                  height: 5,
+                ),
+                padding: EdgeInsets.only(bottom: 70, top: 10),
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
-                  return _buildList(context, snapshot.data.documents[index],
-                      currentChecklist, checklistName, chapterName);
+                  return _buildExpansionTile(
+                      context,
+                      snapshot.data.documents[index],
+                      currentChecklist,
+                      checklistName,
+                      chapterName);
                 },
               );
             }
@@ -89,77 +96,81 @@ class DDx extends StatelessWidget {
   }
 }
 
-Widget _buildList(BuildContext context, DocumentSnapshot document,
+Widget _buildExpansionTile(BuildContext context, DocumentSnapshot document,
     String currentChecklist, String checklistName, String chapterName) {
   String ddxTitle = document['title'];
   String docId = document.documentID;
 
-  return Card(
-    elevation: 8.0,
-    margin: new EdgeInsets.symmetric(horizontal: 4.0, vertical: 6.0),
-    child: Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(2),
-        color: Colors.blueGrey[600],
+  return custom.ExpansionTile(
+    headerBackgroundColor: Color(0xFFF3F5F7),
+    backgroundColor: Color(0xFFF3F5F7),
+    iconColor: Theme.of(context).accentColor,
+    title: Text(
+      ddxTitle,
+      style: Body1TextStyle.copyWith(
+        color: Colors.black,
+        fontWeight: FontWeight.w600,
+        fontSize: 17,
       ),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Text(
-              ddxTitle,
-              style: Body1TextStyle.copyWith(fontWeight: FontWeight.w600),
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(color: Color(0xFFF3F5F7)),
-            child: StreamBuilder(
-              stream: Firestore.instance
-                  .collection('userbase')
-                  .document(checklistName)
-                  .collection('chapter_index')
-                  .document(chapterName)
-                  .collection('ddx')
-                  .document(docId)
-                  .collection('texts')
-                  .orderBy('order', descending: false)
-                  .snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                {
-                  if (!snapshot.hasData) {
-                    return SpinKitRing(
-                      color: Theme.of(context).accentColor,
+      textAlign: TextAlign.center,
+    ),
+    initiallyExpanded: false,
+    children: <Widget>[
+      Container(
+        child: Column(
+          children: <Widget>[
+            Divider(color: Colors.grey[600]),
+            Container(
+              padding: EdgeInsets.only(bottom: 10, top: 2),
+              decoration: BoxDecoration(color: Color(0xFFF3F5F7)),
+              child: StreamBuilder(
+                stream: Firestore.instance
+                    .collection('userbase')
+                    .document(checklistName)
+                    .collection('chapter_index')
+                    .document(chapterName)
+                    .collection('ddx')
+                    .document(docId)
+                    .collection('texts')
+                    .orderBy('order', descending: false)
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  {
+                    if (!snapshot.hasData) {
+                      return SpinKitRing(
+                        color: Theme.of(context).accentColor,
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return Text('error');
+                    }
+
+                    return ListView.separated(
+                      separatorBuilder: (context, index) => Divider(
+                        indent: 25,
+                        endIndent: 25,
+                        color: Colors.grey[500],
+                      ),
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: snapshot.data.documents.length,
+                      itemBuilder: (context, index) {
+                        return _buildListCard(
+                            context,
+                            snapshot.data.documents[index],
+                            checklistName,
+                            chapterName,
+                            ddxTitle);
+                      },
                     );
                   }
-                  if (snapshot.hasError) {
-                    return Text('error');
-                  }
-
-                  return ListView.separated(
-                    separatorBuilder: (context, index) => Divider(
-                      indent: 25,
-                      endIndent: 25,
-                      color: Colors.grey[500],
-                    ),
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: snapshot.data.documents.length,
-                    itemBuilder: (context, index) {
-                      return _buildListCard(
-                          context,
-                          snapshot.data.documents[index],
-                          checklistName,
-                          chapterName,
-                          ddxTitle);
-                    },
-                  );
-                }
-              },
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
+    ],
   );
 }
 
@@ -178,7 +189,9 @@ Widget _buildListCard(BuildContext context, DocumentSnapshot document,
                       child: Text(
                         document['text'],
                         style: Body2TextStyle.copyWith(
-                            color: Colors.black, fontSize: 18),
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
@@ -196,17 +209,17 @@ Widget _buildListCard(BuildContext context, DocumentSnapshot document,
                         child: Text(
                           document['text'],
                           style: Body2TextStyle.copyWith(
-                              color: Colors.black, fontSize: 18),
+                              color: Colors.blue,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline),
                         ),
                       ),
                     ),
-                    SizedBox(width: 5),
-                    Container(
-                      child: Icon(
-                        Icons.arrow_forward,
-                        color: Theme.of(context).accentColor,
-                      ),
-                    )
+                    Icon(
+                      Icons.arrow_forward,
+                      color: Colors.blueAccent,
+                    ),
                   ],
                 ),
               ),
@@ -223,3 +236,79 @@ Widget _buildListCard(BuildContext context, DocumentSnapshot document,
     ),
   );
 }
+
+//OLD BUILDLIST
+// Widget _buildList(BuildContext context, DocumentSnapshot document,
+//     String currentChecklist, String checklistName, String chapterName) {
+//   String ddxTitle = document['title'];
+//   String docId = document.documentID;
+
+//   return Card(
+//     elevation: 8.0,
+//     margin: new EdgeInsets.symmetric(horizontal: 4.0, vertical: 6.0),
+//     child: Container(
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(2),
+//         color: Colors.orange[600],
+//       ),
+//       child: Column(
+//         children: <Widget>[
+//           Padding(
+//             padding: const EdgeInsets.symmetric(vertical: 6),
+//             child: Text(
+//               ddxTitle,
+//               style: Body1TextStyle.copyWith(fontWeight: FontWeight.w600),
+//             ),
+//           ),
+//           Container(
+//             padding: EdgeInsets.only(bottom: 10, top: 2),
+//             decoration: BoxDecoration(color: Color(0xFFF3F5F7)),
+//             child: StreamBuilder(
+//               stream: Firestore.instance
+//                   .collection('userbase')
+//                   .document(checklistName)
+//                   .collection('chapter_index')
+//                   .document(chapterName)
+//                   .collection('ddx')
+//                   .document(docId)
+//                   .collection('texts')
+//                   .orderBy('order', descending: false)
+//                   .snapshots(),
+//               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+//                 {
+//                   if (!snapshot.hasData) {
+//                     return SpinKitRing(
+//                       color: Theme.of(context).accentColor,
+//                     );
+//                   }
+//                   if (snapshot.hasError) {
+//                     return Text('error');
+//                   }
+
+//                   return ListView.separated(
+//                     separatorBuilder: (context, index) => Divider(
+//                       indent: 25,
+//                       endIndent: 25,
+//                       color: Colors.grey[500],
+//                     ),
+//                     physics: const NeverScrollableScrollPhysics(),
+//                     shrinkWrap: true,
+//                     itemCount: snapshot.data.documents.length,
+//                     itemBuilder: (context, index) {
+//                       return _buildListCard(
+//                           context,
+//                           snapshot.data.documents[index],
+//                           checklistName,
+//                           chapterName,
+//                           ddxTitle);
+//                     },
+//                   );
+//                 }
+//               },
+//             ),
+//           ),
+//         ],
+//       ),
+//     ),
+//   );
+// }

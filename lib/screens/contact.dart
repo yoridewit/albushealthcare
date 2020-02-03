@@ -19,7 +19,7 @@ class Contact extends StatelessWidget {
           },
         ),
       ),
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8),

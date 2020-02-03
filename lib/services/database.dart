@@ -1,6 +1,5 @@
 import 'package:albus/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import '../models/checklists.dart';
 
 class DatabaseService {
@@ -69,8 +68,8 @@ class DatabaseService {
     return UserData(
       uid: uid,
       name: snapshot.data['name'],
-      subscribedChecklists: snapshot.data['subscribedTo'],
-      ownedChecklists: snapshot.data['ownsChecklists'],
+      subscribedChecklists: snapshot.data['subscribedChecklists'],
+      ownedChecklists: snapshot.data['ownedChecklists'],
     );
   }
 

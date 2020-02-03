@@ -1,12 +1,9 @@
 import 'package:albus/constants/style.dart';
-import 'package:albus/models/chapters.dart';
 import 'package:albus/models/medication_naming.dart';
 import 'package:albus/providers/weights.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:slide_popup_dialog/slide_popup_dialog.dart';
 
 class Medication extends StatelessWidget {
   static const String id = 'chapter_screen';
@@ -23,7 +20,7 @@ class Medication extends StatelessWidget {
     String currentChecklist = checkListName;
 
     return Scaffold(
-      backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Container(
         child: StreamBuilder(
           stream: Firestore.instance
@@ -89,6 +86,10 @@ class Medication extends StatelessWidget {
   }
 }
 
+String formatDecimal(double n) {
+  return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 2);
+}
+
 Widget _buildList(
     BuildContext context, DocumentSnapshot document, String currentChecklist) {
   int tempNumber = Provider.of<Weights>(context).weight;
@@ -115,7 +116,7 @@ Widget _buildList(
     if (dosageHigh == null && medicationItem.calculate == false) {
       return dosageLow;
     }
-    //If there is no high dosage given and there is NOT a weight entered for calculation
+    //If there IS high dosage given but there is NOT a weight entered for calculation
     if (dosageHigh != null && tempNumber == null) {
       return '$dosageLow - $dosageHigh';
     }
@@ -166,71 +167,77 @@ Widget _buildList(
     return stringReturn;
   }
 
-  return tempNumber == null
-      ? Card(
-          elevation: 0.0,
-          margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Color(0xFFF3F5F7),
-                borderRadius: BorderRadius.circular(2)),
-            child: Container(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      document['medicationName'],
-                      style: Body1TextStyle.copyWith(
-                          color: Colors.black, fontWeight: FontWeight.w600),
-                    ),
-                    Text(
-                      formulateStringNoCalculation(medicationItem),
-                      style: Body1TextStyle.copyWith(color: Colors.black),
-                    ),
-                  ],
+  return AnimatedCrossFade(
+    duration: const Duration(milliseconds: 150),
+    firstChild: Card(
+      elevation: 0.0,
+      margin: new EdgeInsets.only(left: 5, right: 5, bottom: 5),
+      child: Container(
+        decoration: BoxDecoration(color: Color(0xFFF3F5F7)),
+        child: Container(
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  document['medicationName'],
+                  style: Body1TextStyle.copyWith(
+                      color: Colors.black, fontWeight: FontWeight.w600),
                 ),
-              ),
+                Text(
+                  formulateStringNoCalculation(medicationItem),
+                  style: Body1TextStyle.copyWith(color: Colors.black),
+                ),
+              ],
             ),
           ),
-        )
-      : Card(
-          elevation: 0.0,
-          margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Color(0xFFF3F5F7),
-                borderRadius: BorderRadius.circular(5)),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(width: 1.4, color: Colors.deepOrange[400]),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(4.0),
+        ),
+      ),
+    ),
+    secondChild: Card(
+      elevation: 0.0,
+      margin: new EdgeInsets.only(left: 5, right: 5, bottom: 5),
+      child: Container(
+        decoration: BoxDecoration(color: Color(0xFFF3F5F7)),
+        child: Container(
+          decoration: BoxDecoration(
+            border:
+                Border.all(width: 1.4, color: Theme.of(context).accentColor),
+          ),
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    document['medicationName'],
+                    style: Body1TextStyle.copyWith(
+                        color: Colors.black, fontWeight: FontWeight.w600),
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        document['medicationName'],
-                        style: Body1TextStyle.copyWith(
-                            color: Colors.black, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    Text(
-                      formulateStringWithCalculation(medicationItem),
-                      style: Body1TextStyle.copyWith(color: Colors.black),
-                    ),
-                  ],
+                Text(
+                  formulateStringWithCalculation(medicationItem),
+                  style: Body1TextStyle.copyWith(color: Colors.black),
                 ),
-              ),
+              ],
             ),
           ),
-        );
+        ),
+      ),
+    ),
+    crossFadeState: _checkWeightForNull(tempNumber)
+        ? CrossFadeState.showFirst
+        : CrossFadeState.showSecond,
+  );
+}
+
+_checkWeightForNull(int tempNumber) {
+  if (tempNumber == null) {
+    return true;
+  }
+  return false;
 }

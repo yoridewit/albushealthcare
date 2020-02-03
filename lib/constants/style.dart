@@ -32,7 +32,7 @@ const Body2TextStyle = TextStyle(
   fontFamily: FontNameCondensed,
   fontWeight: FontWeight.w100,
   fontSize: SubtextSize,
-  color: Colors.white70,
+  color: Colors.white,
 );
 
 const textInputDecoration = InputDecoration(

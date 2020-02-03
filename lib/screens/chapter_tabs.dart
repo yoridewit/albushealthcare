@@ -41,13 +41,13 @@ class _ChapterTabsState extends State<ChapterTabs> {
           });
     }
 
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Theme.of(context).primaryColor));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Theme.of(context).scaffoldBackgroundColor));
     return ChangeNotifierProvider(
       create: (ctx) => Documents(),
       child: Scaffold(
         drawer: DrawerWidget(),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: CustomAppBar(
           title: chapterName,
           icon: IconButton(
@@ -60,7 +60,7 @@ class _ChapterTabsState extends State<ChapterTabs> {
         body: DefaultTabController(
           length: 3,
           child: Scaffold(
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
             floatingActionButton: FloatingActionButton.extended(
                 onPressed: () {
                   tempNumber == null
@@ -68,12 +68,17 @@ class _ChapterTabsState extends State<ChapterTabs> {
                       : Provider.of<Weights>(context).deleteValue();
                 },
                 elevation: 10.0,
-                icon: tempNumber == null
-                    ? Icon(Icons.add)
-                    : Icon(Icons.delete_forever),
+                icon: AnimatedCrossFade(
+                  duration: Duration(milliseconds: 300),
+                  firstChild: Icon(Icons.add),
+                  secondChild: Icon(Icons.delete_forever),
+                  crossFadeState: _checkWeightForNull(tempNumber)
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
+                ),
                 label: Text(
                   tempNumber == null ? 'KG' : '$tempNumber KG',
-                  style: Body1TextStyle,
+                  style: Body1TextStyle.copyWith(color: Colors.white),
                 )),
             body: TabBarView(
               children: <Widget>[
@@ -94,12 +99,15 @@ class _ChapterTabsState extends State<ChapterTabs> {
             ),
             //CONTENT
             bottomNavigationBar: TabBar(
+              labelPadding:
+                  EdgeInsets.only(top: 4, left: 4, right: 4, bottom: 2),
               tabs: <Widget>[
                 //FIRST TAB
                 Tab(
                   icon: Icon(
                     Icons.assignment,
                     color: Colors.white,
+                    size: 28,
                   ),
                 ),
                 //SECOND TAB
@@ -107,6 +115,7 @@ class _ChapterTabsState extends State<ChapterTabs> {
                   icon: Icon(
                     Icons.colorize,
                     color: Colors.white,
+                    size: 28,
                   ),
                 ),
                 //THIRD TAB
@@ -114,13 +123,14 @@ class _ChapterTabsState extends State<ChapterTabs> {
                   icon: Icon(
                     Icons.help,
                     color: Colors.white,
+                    size: 28,
                   ),
                 ),
               ],
-              unselectedLabelColor: Colors.black,
+              unselectedLabelColor: Colors.white,
               indicatorSize: TabBarIndicatorSize.label,
               indicatorPadding: EdgeInsets.all(5.0),
-              indicatorColor: Colors.red,
+              indicatorColor: Theme.of(context).accentColor,
               indicatorWeight: 4.0,
             ),
           ),
@@ -128,4 +138,11 @@ class _ChapterTabsState extends State<ChapterTabs> {
       ),
     );
   }
+}
+
+_checkWeightForNull(int tempNumber) {
+  if (tempNumber == null) {
+    return true;
+  }
+  return false;
 }

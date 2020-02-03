@@ -48,6 +48,8 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: Theme.of(context).primaryColor));
 
@@ -56,7 +58,7 @@ class _RegisterState extends State<Register> {
       backgroundColor: Theme.of(context).primaryColor,
       appBar: CustomAppBar(title: '', icon: null),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: screenWidth > 500 ? 200 : 30),
         child: loading
             ? SpinKitCircle(
                 color: Theme.of(context).accentColor,
@@ -64,13 +66,6 @@ class _RegisterState extends State<Register> {
             : Container(
                 child: Column(
                   children: <Widget>[
-                    // FadeAnimation(
-                    //   0.5,
-                    //   Image.asset(
-                    //     'assets/logo_white.png',
-                    //     width: 100,
-                    //   ),
-                    // ),
                     SizedBox(
                       height: 20,
                     ),
@@ -78,288 +73,326 @@ class _RegisterState extends State<Register> {
                       key: _formKey,
                       child: Column(
                         children: <Widget>[
+                          FadeAnimation(
+                            0.2,
+                            Image.asset(
+                              'assets/logo_white.png',
+                              width: screenWidth > 500 ? 200 : 100,
+                            ),
+                          ),
                           SizedBox(
-                            height: 20,
+                            height: 40,
                           ),
                           FadeAnimation(
-                            0.7,
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 30.0, vertical: 30.0),
-                              decoration: BoxDecoration(
-                                border: Border.all(width: 1.0),
-                                borderRadius: BorderRadius.circular(10.0),
-                                color: Colors.white,
-                              ),
-                              child: showPasswordField == false
-                                  //Name + Email box
-                                  ? Column(
-                                      children: <Widget>[
-                                        Text(
-                                          'Register',
-                                          style: Body1TextStyle.copyWith(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              fontSize: 24.0),
-                                        ),
-                                        SizedBox(
-                                          height: 10.0,
-                                        ),
-                                        Container(
-                                          child: FadeAnimation(
-                                            1,
-                                            TextFormField(
-                                              decoration:
-                                                  buildInputDecorationFormat(
-                                                      context, 'Name'),
-                                              validator: (val) => val.isEmpty
-                                                  ? 'Please enter your name'
-                                                  : null,
-                                              onChanged: (val) {
-                                                setState(() => name = val);
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(height: 10),
-                                        Container(
-                                          child: FadeAnimation(
-                                            1.2,
-                                            TextFormField(
-                                              decoration:
-                                                  buildInputDecorationFormat(
-                                                      context, 'E-mail adress'),
-                                              validator: EmailValidator(
-                                                  errorText:
-                                                      'Enter a valid e-mail adress'),
-                                              onChanged: (val) {
-                                                setState(() => email = val);
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(height: 10),
-                                        FadeAnimation(
-                                          1.4,
-                                          RaisedButton(
-                                            child: Text('Next',
-                                                style: Body1TextStyle),
-                                            onPressed: () {
-                                              if (_formKey.currentState
-                                                  .validate()) {
-                                                setState(() =>
-                                                    togglePasswordField());
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 10.0,
-                                        ),
-                                        FadeAnimation(
-                                          1.6,
-                                          InkWell(
-                                            child: Text(
-                                              'Already a member? Sign in',
+                            0.4,
+                            Column(
+                              children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 30.0, vertical: 30.0),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 1.0),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    color: Colors.white,
+                                  ),
+                                  child: showPasswordField == false
+                                      //Name + Email box
+                                      ? Column(
+                                          children: <Widget>[
+                                            Text(
+                                              'Register',
                                               style: Body1TextStyle.copyWith(
                                                   color: Theme.of(context)
-                                                      .primaryColor),
+                                                      .primaryColor,
+                                                  fontSize: 24.0),
                                             ),
-                                            onTap: () {
-                                              widget.toggleViewFunction();
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  //Password box
-                                  : Column(
-                                      children: <Widget>[
-                                        Text(
-                                          'Register',
-                                          style: Body1TextStyle.copyWith(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              fontSize: 24.0),
-                                        ),
-                                        SizedBox(
-                                          height: 10.0,
-                                        ),
-                                        FadeAnimation(
-                                          0.5,
-                                          TextFormField(
-                                            decoration:
-                                                buildInputDecorationFormat(
-                                                    context, 'Password'),
-                                            validator: passWordValidator,
-                                            obscureText: true,
-                                            onChanged: (val) {
-                                              setState(() {
-                                                password = val;
-                                                setState(() {
-                                                  passwordCheck = val;
-                                                  if (val.contains(RegExp(
-                                                      r'(?=.*?[#?!@$%^&*-])'))) {
-                                                    passwordSpecialCharacter =
-                                                        true;
-                                                  }
-                                                  if (!val.contains(RegExp(
-                                                      r'(?=.*?[#?!@$%^&*-])'))) {
-                                                    passwordSpecialCharacter =
-                                                        false;
-                                                  }
-                                                  if (val.contains(
-                                                      RegExp(r'[A-Z]'))) {
-                                                    passwordUpperCaseCharacter =
-                                                        true;
-                                                  }
-                                                  if (!val.contains(
-                                                      RegExp(r'[A-Z]'))) {
-                                                    passwordUpperCaseCharacter =
-                                                        false;
-                                                  }
-                                                  if (val.length >= 8) {
-                                                    passwordMinLength = true;
-                                                  }
-                                                  if (val.length < 8) {
-                                                    passwordMinLength = false;
-                                                  }
-                                                });
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                        SizedBox(height: 10),
-                                        FadeAnimation(
-                                          0.7,
-                                          TextFormField(
-                                            decoration:
-                                                buildInputDecorationFormat(
-                                                    context,
-                                                    'Re-enter password'),
-                                            validator: (val) => val != password
-                                                ? 'Passwords don\'t match'
-                                                : null,
-                                            obscureText: true,
-                                            onChanged: (val) {},
-                                          ),
-                                        ),
-                                        Text(
-                                          error,
-                                          style: TextStyle(
-                                              color: Colors.red, fontSize: 14),
-                                        ),
-                                        FadeAnimation(
-                                          0.9,
-                                          Column(children: <Widget>[
-                                            passwordMinLength
-                                                ? Text('More than 8 characters',
-                                                    style: TextStyle(
-                                                        decoration:
-                                                            TextDecoration
-                                                                .lineThrough,
-                                                        color:
-                                                            Colors.green[500]))
-                                                : Text('More than 8 characters',
-                                                    style: TextStyle(
-                                                        color: Colors
-                                                            .redAccent[100])),
-                                            passwordUpperCaseCharacter
-                                                ? Text(
-                                                    'At least 1 upper case character',
-                                                    style: TextStyle(
-                                                        decoration:
-                                                            TextDecoration
-                                                                .lineThrough,
-                                                        color:
-                                                            Colors.green[500]))
-                                                : Text(
-                                                    'At least 1 upper case character',
-                                                    style: TextStyle(
-                                                        color: Colors
-                                                            .redAccent[100])),
-                                            passwordSpecialCharacter
-                                                ? Text(
-                                                    'At least 1 special character',
-                                                    style: TextStyle(
-                                                        decoration:
-                                                            TextDecoration
-                                                                .lineThrough,
-                                                        color:
-                                                            Colors.green[500]))
-                                                : Text(
-                                                    'At least 1 special character',
-                                                    style: TextStyle(
-                                                        color: Colors
-                                                            .redAccent[100])),
-                                          ]),
-                                        ),
-                                        SizedBox(height: 10),
-                                        FadeAnimation(
-                                          1,
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: <Widget>[
-                                              RaisedButton(
-                                                color: Colors.grey[300],
-                                                child: Text('Back',
-                                                    style:
-                                                        Body1TextStyle.copyWith(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .primaryColor)),
-                                                onPressed: () {
-                                                  //back to email + pw
-                                                  togglePasswordField();
-                                                },
+                                            SizedBox(
+                                              height: 10.0,
+                                            ),
+                                            Container(
+                                              child: FadeAnimation(
+                                                0.5,
+                                                TextFormField(
+                                                  decoration:
+                                                      buildInputDecorationFormat(
+                                                          context,
+                                                          'Name',
+                                                          Icon(Icons
+                                                              .person_outline)),
+                                                  validator: (val) => val
+                                                          .isEmpty
+                                                      ? 'Please enter your name'
+                                                      : null,
+                                                  onChanged: (val) {
+                                                    setState(() => name = val);
+                                                  },
+                                                ),
                                               ),
+                                            ),
+                                            SizedBox(height: 10),
+                                            Container(
+                                              child: FadeAnimation(
+                                                0.5,
+                                                TextFormField(
+                                                  decoration:
+                                                      buildInputDecorationFormat(
+                                                          context,
+                                                          'E-mail adress',
+                                                          Icon(Icons.email)),
+                                                  validator: EmailValidator(
+                                                      errorText:
+                                                          'Enter a valid e-mail adress'),
+                                                  onChanged: (val) {
+                                                    setState(() => email = val);
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(height: 10),
+                                            FadeAnimation(
+                                              0.5,
                                               RaisedButton(
-                                                child: Text('Register',
+                                                child: Text('Next',
                                                     style: Body1TextStyle),
-                                                onPressed: () async {
-                                                  //register
+                                                onPressed: () {
                                                   if (_formKey.currentState
                                                       .validate()) {
-                                                    setState(
-                                                        () => loading = true);
-                                                    dynamic result = await _auth
-                                                        .registerWithEmailAndPassword(
-                                                            email,
-                                                            password,
-                                                            name);
-                                                    if (result == null) {
-                                                      setState(() {
-                                                        error =
-                                                            'Error signing up';
-                                                        loading = false;
-                                                      });
-                                                    }
+                                                    setState(() =>
+                                                        togglePasswordField());
                                                   }
                                                 },
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 10.0,
-                                        ),
-                                        FadeAnimation(
-                                          1.1,
-                                          InkWell(
-                                            child: Text(
-                                              'Sign in',
-                                              style: Body1TextStyle.copyWith(
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
                                             ),
-                                            onTap: () {
-                                              widget.toggleViewFunction();
-                                            },
-                                          ),
+                                            SizedBox(
+                                              height: 10.0,
+                                            ),
+                                            FadeAnimation(
+                                              0.5,
+                                              InkWell(
+                                                child: Text(
+                                                  'Already a member? Sign in',
+                                                  style:
+                                                      Body1TextStyle.copyWith(
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .primaryColor),
+                                                ),
+                                                onTap: () {
+                                                  widget.toggleViewFunction();
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      //Password box
+                                      : Column(
+                                          children: <Widget>[
+                                            FadeAnimation(
+                                              0.4,
+                                              Text(
+                                                'Register',
+                                                style: Body1TextStyle.copyWith(
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    fontSize: 24.0),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 10.0,
+                                            ),
+                                            FadeAnimation(
+                                              0.5,
+                                              TextFormField(
+                                                decoration:
+                                                    buildInputDecorationFormat(
+                                                        context,
+                                                        'Password',
+                                                        Icon(Icons
+                                                            .lock_outline)),
+                                                validator: passWordValidator,
+                                                obscureText: true,
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    password = val;
+                                                    setState(() {
+                                                      passwordCheck = val;
+                                                      if (val.contains(RegExp(
+                                                          r'(?=.*?[#?!@$%^&*-])'))) {
+                                                        passwordSpecialCharacter =
+                                                            true;
+                                                      }
+                                                      if (!val.contains(RegExp(
+                                                          r'(?=.*?[#?!@$%^&*-])'))) {
+                                                        passwordSpecialCharacter =
+                                                            false;
+                                                      }
+                                                      if (val.contains(
+                                                          RegExp(r'[A-Z]'))) {
+                                                        passwordUpperCaseCharacter =
+                                                            true;
+                                                      }
+                                                      if (!val.contains(
+                                                          RegExp(r'[A-Z]'))) {
+                                                        passwordUpperCaseCharacter =
+                                                            false;
+                                                      }
+                                                      if (val.length >= 8) {
+                                                        passwordMinLength =
+                                                            true;
+                                                      }
+                                                      if (val.length < 8) {
+                                                        passwordMinLength =
+                                                            false;
+                                                      }
+                                                    });
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                            SizedBox(height: 10),
+                                            FadeAnimation(
+                                              0.5,
+                                              TextFormField(
+                                                decoration:
+                                                    buildInputDecorationFormat(
+                                                        context,
+                                                        'Re-enter password',
+                                                        Icon(Icons.lock)),
+                                                validator: (val) => val !=
+                                                        password
+                                                    ? 'Passwords don\'t match'
+                                                    : null,
+                                                obscureText: true,
+                                                onChanged: (val) {},
+                                              ),
+                                            ),
+                                            Text(
+                                              error,
+                                              style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontSize: 14),
+                                            ),
+                                            FadeAnimation(
+                                              0.5,
+                                              Column(children: <Widget>[
+                                                passwordMinLength
+                                                    ? Text(
+                                                        'More than 8 characters',
+                                                        style: TextStyle(
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .lineThrough,
+                                                            color: Colors
+                                                                .green[500]))
+                                                    : Text(
+                                                        'More than 8 characters',
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                    .redAccent[
+                                                                100])),
+                                                passwordUpperCaseCharacter
+                                                    ? Text(
+                                                        'At least 1 upper case character',
+                                                        style: TextStyle(
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .lineThrough,
+                                                            color: Colors
+                                                                .green[500]))
+                                                    : Text(
+                                                        'At least 1 upper case character',
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                    .redAccent[
+                                                                100])),
+                                                passwordSpecialCharacter
+                                                    ? Text(
+                                                        'At least 1 special character',
+                                                        style: TextStyle(
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .lineThrough,
+                                                            color: Colors
+                                                                .green[500]))
+                                                    : Text(
+                                                        'At least 1 special character',
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                    .redAccent[
+                                                                100])),
+                                              ]),
+                                            ),
+                                            SizedBox(height: 10),
+                                            FadeAnimation(
+                                              0.5,
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: <Widget>[
+                                                  RaisedButton(
+                                                    color: Colors.grey[300],
+                                                    child: Text('Back',
+                                                        style: Body1TextStyle
+                                                            .copyWith(
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .primaryColor)),
+                                                    onPressed: () {
+                                                      //back to email + pw
+                                                      togglePasswordField();
+                                                    },
+                                                  ),
+                                                  RaisedButton(
+                                                    child: Text('Register',
+                                                        style: Body1TextStyle),
+                                                    onPressed: () async {
+                                                      //register
+                                                      if (_formKey.currentState
+                                                          .validate()) {
+                                                        setState(() =>
+                                                            loading = true);
+                                                        dynamic result = await _auth
+                                                            .registerWithEmailAndPassword(
+                                                                email,
+                                                                password,
+                                                                name);
+                                                        if (result == null) {
+                                                          setState(() {
+                                                            error =
+                                                                'Error signing up';
+                                                            loading = false;
+                                                          });
+                                                        }
+                                                      }
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 10.0,
+                                            ),
+                                            FadeAnimation(
+                                              0.5,
+                                              InkWell(
+                                                child: Text(
+                                                  'Sign in',
+                                                  style:
+                                                      Body1TextStyle.copyWith(
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .primaryColor),
+                                                ),
+                                                onTap: () {
+                                                  widget.toggleViewFunction();
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -385,8 +418,9 @@ class _RegisterState extends State<Register> {
   }
 
   InputDecoration buildInputDecorationFormat(
-      BuildContext context, String labelText) {
+      BuildContext context, String labelText, Icon icon) {
     return InputDecoration(
+      prefixIcon: icon,
       labelText: labelText,
       labelStyle:
           Body1TextStyle.copyWith(color: Theme.of(context).primaryColor),

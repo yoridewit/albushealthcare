@@ -9,17 +9,26 @@ class ChecklistTileHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    return InkWell(
       onTap: () {
         Navigator.pushNamed(context, ChapterIndex.id, arguments: checklist);
       },
-      title: Text(
-        checklist.checkListTitle,
-        style: Body1TextStyle.copyWith(
-          color: Theme.of(context).primaryColor,
-          fontWeight: FontWeight.w600,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(0xFFF3F5F7),
+          borderRadius: BorderRadius.circular(5),
         ),
-        textAlign: TextAlign.center,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: Text(
+            checklist.checkListTitle,
+            style: Body1TextStyle.copyWith(
+              color: Theme.of(context).primaryColor,
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
       ),
     );
   }
